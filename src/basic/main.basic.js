@@ -89,7 +89,7 @@ const ShoppingCart = (() => {
           luckyItem.price = Math.round(
             luckyItem.price * FLASH_SALE_DISCOUNT_RATE
           );
-          alert("번개세일! " + luckyItem.name + "이(가) 20% 할인 중입니다!");
+          alert(`번개세일! ${luckyItem.name}이(가) 20% 할인 중입니다!`);
           updateSelOpts();
         }
       }, 30000);
@@ -105,7 +105,7 @@ const ShoppingCart = (() => {
           });
           if (suggest) {
             alert(
-              suggest.name + "은(는) 어떠세요? 지금 구매하시면 5% 추가 할인!"
+              `${suggest.name}은(는) 어떠세요? 지금 구매하시면 5% 추가 할인!`
             );
             suggest.price = Math.round(suggest.price * RECOMMEND_DISCOUNT_RATE);
             updateSelOpts();
@@ -123,7 +123,7 @@ const ShoppingCart = (() => {
     products.forEach(item => {
       let opt = document.createElement("option");
       opt.value = item.id;
-      opt.textContent = item.name + " - " + item.price + "원";
+      opt.textContent = `${item.name} - ${item.price}원`;
       if (item.quantity === 0) opt.disabled = true;
       productSelector.appendChild(opt);
     });
@@ -185,19 +185,13 @@ const ShoppingCart = (() => {
   }
 
   function updateStockInfo() {
-    let infoMsg = "";
+    let message = "";
     products.forEach(item => {
       if (item.quantity < LOW_STOCK_THRESHOLD) {
-        infoMsg +=
-          item.name +
-          ": " +
-          (item.quantity > 0
-            ? "재고 부족 (" + item.quantity + "개 남음)"
-            : "품절") +
-          "\n";
+        message = `${item.name}: ${item.quantity > 0 ? `재고 부족 (${item.quantity}개 남음)` : "품절"}`;
       }
     });
-    stockInfo.textContent = infoMsg;
+    stockInfo.textContent = message;
   }
 
   // event listeners
@@ -289,21 +283,19 @@ const ShoppingCart = (() => {
     newItem.id = product.id;
     newItem.className = CSS_CLASSES.CART_ITEM;
 
-    newItem.innerHTML =
-      "<span>" +
-      product.name +
-      " - " +
-      product.price +
-      "원 x 1</span><div>" +
-      '<button class="quantity-change bg-blue-500 text-white px-2 py-1 rounded mr-1" data-product-id="' +
-      product.id +
-      '" data-change="-1">-</button>' +
-      '<button class="quantity-change bg-blue-500 text-white px-2 py-1 rounded mr-1" data-product-id="' +
-      product.id +
-      '" data-change="1">+</button>' +
-      '<button class="remove-item bg-red-500 text-white px-2 py-1 rounded" data-product-id="' +
-      product.id +
-      '">삭제</button></div>';
+    newItem.innerHTML = `
+      <span>${product.name} - ${product.price}원 x 1</span>
+      <div>
+        <button class="quantity-change bg-blue-500 text-white px-2 py-1 rounded mr-1" 
+                data-product-id="${product.id}" 
+                data-change="-1">-</button>
+        <button class="quantity-change bg-blue-500 text-white px-2 py-1 rounded mr-1" 
+                data-product-id="${product.id}" 
+                data-change="1">+</button>
+        <button class="remove-item bg-red-500 text-white px-2 py-1 rounded" 
+                data-product-id="${product.id}">삭제</button>
+      </div>
+    `;
 
     return newItem;
   }
@@ -336,7 +328,7 @@ const ShoppingCart = (() => {
       pointElement.className = CSS_CLASSES.POINTS_SPAN;
       cartTotal.appendChild(pointElement);
     }
-    pointElement.textContent = "(포인트: " + bonusPoints + ")";
+    pointElement.textContent = `(포인트: ${bonusPoints})`;
   }
 
   function renderCart(cartInfo) {
