@@ -1,8 +1,10 @@
+import { PRODUCT_SELECT_ID } from '../constants';
+
 const ProductSelector = {
   init: () => {},
   render: ({ products }) => {
     return `
-        <select id="product-select" class="border rounded p-2 mr-2">
+        <select id="${PRODUCT_SELECT_ID}" class="border rounded p-2 mr-2">
           ${products
             .map(
               item =>

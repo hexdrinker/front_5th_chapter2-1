@@ -1,6 +1,8 @@
+import { CART_ITEMS_ID } from '../constants';
+
 const CartItem = {
   init: cartService => {
-    const cartItemsElement = document.querySelector('#cart-items');
+    const cartItemsElement = document.querySelector(`#${CART_ITEMS_ID}`);
 
     const { updateCartItem, removeCartItem } = cartService;
 
@@ -8,16 +10,15 @@ const CartItem = {
       const { target } = event;
 
       const productId = target.dataset.productId;
-      const productElement = document.querySelector(`#${productId}`);
 
       if (target.classList.contains('quantity-change')) {
         const change = parseInt(target.dataset.change);
-        updateCartItem(change, productElement, productId);
+        updateCartItem(change, productId);
         return;
       }
 
       if (target.classList.contains('remove-item')) {
-        removeCartItem(productId, productElement);
+        removeCartItem(productId);
       }
     });
   },

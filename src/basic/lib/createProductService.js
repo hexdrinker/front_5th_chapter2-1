@@ -1,3 +1,5 @@
+import { PRODUCT_SELECT_ID } from '../constants';
+
 export function createProductService(store) {
   const getProductById = productId => {
     return store.products.find(product => product.id === productId);
@@ -11,19 +13,10 @@ export function createProductService(store) {
     return store.products[Math.floor(Math.random() * store.products.length)];
   };
 
-  // 프로모션 시 상품 가격 변경
   const updateProductPrice = (productId, newPrice) => {
-    const productSelector = document.querySelector('#product-select');
-    const productOptions = productSelector.querySelectorAll('option');
     const product = getProductById(productId);
-
-    for (const option of productOptions) {
-      if (option.value !== productId) {
-        continue;
-      }
-      product.price = newPrice;
-      option.textContent = `${product.name} - ${newPrice}원`;
-    }
+    updateProductElementPrice(productId, newPrice);
+    product.price = newPrice;
   };
 
   return {

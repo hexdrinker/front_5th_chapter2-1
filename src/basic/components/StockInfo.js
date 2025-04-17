@@ -1,11 +1,12 @@
-import { updateStockInfo } from '../utils/functions.js';
+import { STOCK_STATUS_ID } from '../constants';
+import { updateStockStatusElement } from '../utils';
 
 const StockInfo = {
   init: store => {
-    updateStockInfo(store.products);
+    updateStockStatusElement(store.products);
   },
   render: () => {
-    return `<div id="stock-status" class="text-sm text-gray-500 mt-2"></div>`;
+    return `<div id="${STOCK_STATUS_ID}" class="text-sm text-gray-500 mt-2"></div>`;
   },
 };
 

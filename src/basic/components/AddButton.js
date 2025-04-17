@@ -1,7 +1,9 @@
+import { PRODUCT_SELECT_ID, ADD_TO_CART_ID } from '../constants';
+
 const AddButton = {
   init: (productService, cartService, promotionService) => {
-    const select = document.querySelector('#product-select');
-    const button = document.querySelector('#add-to-cart');
+    const select = document.querySelector(`#${PRODUCT_SELECT_ID}`);
+    const button = document.querySelector(`#${ADD_TO_CART_ID}`);
 
     const { getProductById } = productService;
     const { addCartItem } = cartService;
@@ -22,7 +24,7 @@ const AddButton = {
 
   render: () => {
     return `
-      <button id="add-to-cart" class="bg-blue-500 text-white px-4 py-2 rounded">
+      <button id="${ADD_TO_CART_ID}" class="bg-blue-500 text-white px-4 py-2 rounded">
         추가
       </button>
     `;

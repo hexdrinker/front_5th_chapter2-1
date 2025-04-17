@@ -1,11 +1,12 @@
-import { updateCartTotalElement } from '../utils/functions.js';
+import { updateCartTotalElement } from '../utils';
+import { CART_TOTAL_ID } from '../constants';
 
 const CartTotal = {
   init: ({ totalAmount, discountRate }) => {
     updateCartTotalElement(totalAmount, discountRate);
   },
   render: () => {
-    return `<div id="cart-total" class="text-xl font-bold my-4"></div>`;
+    return `<div id="${CART_TOTAL_ID}" class="text-xl font-bold my-4"></div>`;
   },
 };
 

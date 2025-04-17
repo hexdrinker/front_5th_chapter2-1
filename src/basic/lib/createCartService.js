@@ -1,15 +1,17 @@
 import {
-  getQuantityFromElement,
-  createCartItemElement,
-  updateCartItemQuantity,
+  getCartItemElementById,
+  getCartItemQuantityFromElement,
+  addNewCartItemElement,
+  updateCartItemElement,
   updateCartTotalElement,
-  updateStockInfo,
-} from '../utils/functions';
+  updateStockStatusElement,
+} from '../utils';
 import {
   QUANTITY_DISCOUNT_RATE,
   BULK_DISCOUNT_RATE,
   BULK_DISCOUNT_THRESHOLD,
   TUESDAY_DISCOUNT_RATE,
+  CART_ITEMS_ID,
 } from '../constants';
 
 export const createCartService = (store, productService) => {
@@ -19,17 +21,16 @@ export const createCartService = (store, productService) => {
 
   const incrementCartItemQuantity = productId => {
     const product = productService.getProductById(productId);
-    const productElement = document.querySelector(`#${productId}`);
     const cartItem = getCartItemById(productId);
+    const cartItemElement = getCartItemElementById(productId);
     const newQuantity = cartItem.quantity + 1;
 
-    console.log(newQuantity, cartItem.quantity);
     if (!product || product.quantity <= newQuantity) {
       alert('재고가 부족합니다.');
       return false;
     }
 
-    updateCartItemQuantity(productElement, product, newQuantity);
+    updateCartItemElement(cartItemElement, product, newQuantity);
 
     cartItem.quantity += 1;
     product.quantity -= 1;
@@ -39,12 +40,10 @@ export const createCartService = (store, productService) => {
   const addNewCartItem = productId => {
     const product = productService.getProductById(productId);
 
-    const cartItemsElement = document.querySelector('#cart-items');
-    const newItem = createCartItemElement(product);
-    cartItemsElement.appendChild(newItem);
-
+    addNewCartItemElement(product);
     store.cart.push({ productId, quantity: 1 });
     product.quantity -= 1;
+
     return true;
   };
 
@@ -68,9 +67,10 @@ export const createCartService = (store, productService) => {
     return change <= productQuantity;
   };
 
-  const updateCartItem = (change, productElement, productId) => {
+  const updateCartItem = (change, productId) => {
     const product = productService.getProductById(productId);
     const cartItem = getCartItemById(productId);
+    const cartItemElement = getCartItemElementById(productId);
     const quantity = cartItem.quantity;
     const newQuantity = quantity + change;
 
@@ -82,9 +82,9 @@ export const createCartService = (store, productService) => {
     if (newQuantity <= 0) {
       store.cart = store.cart.filter(item => item.productId !== productId);
       product.quantity -= change;
-      productElement.remove();
+      cartItemElement.remove();
     } else {
-      updateCartItemQuantity(productElement, product, newQuantity);
+      updateCartItemElement(cartItemElement, product, newQuantity);
       product.quantity -= change;
       cartItem.quantity += change;
     }
@@ -92,15 +92,16 @@ export const createCartService = (store, productService) => {
     updateCartInfo();
   };
 
-  const removeCartItem = (productId, productElement) => {
+  const removeCartItem = productId => {
     const product = productService.getProductById(productId);
     const cartItem = getCartItemById(productId);
+    const cartItemElement = getCartItemElementById(productId);
     const quantity = cartItem.quantity;
 
     store.cart = store.cart.filter(item => item.productId !== productId);
     product.quantity += quantity;
 
-    productElement.remove();
+    cartItemElement.remove();
     updateCartInfo();
   };
 
@@ -110,9 +111,9 @@ export const createCartService = (store, productService) => {
     store.itemCount = cartInfo.itemCount;
     store.discountRate = cartInfo.discountRate;
 
-    calculateCartTotal(store.totalAmount, store.discountRate);
+    updateCartTotal(store.totalAmount, store.discountRate);
 
-    updateStockInfo(store.products);
+    updateStockStatusElement(store.products);
   };
 
   const getCartInfo = () => {
@@ -120,12 +121,12 @@ export const createCartService = (store, productService) => {
     let itemCount = 0;
     let subTot = 0;
 
-    const cartItemsElement = document.querySelector('#cart-items');
+    const cartItemsElement = document.querySelector(`#${CART_ITEMS_ID}`);
     const cartItems = cartItemsElement.children;
 
     for (let i = 0; i < cartItems.length; i++) {
       const currentItem = productService.getProductById(cartItems[i].id);
-      const quantity = getQuantityFromElement(cartItems[i]);
+      const quantity = getCartItemQuantityFromElement(cartItems[i]);
       const currentItemTotal = currentItem.price * quantity;
       let disc = 0;
       itemCount += quantity;
@@ -165,7 +166,7 @@ export const createCartService = (store, productService) => {
     };
   };
 
-  const calculateCartTotal = (totalAmount, discountRate) => {
+  const updateCartTotal = (totalAmount, discountRate) => {
     updateCartTotalElement(totalAmount, discountRate);
   };
 
