@@ -11,11 +11,6 @@ export function createProductService(store) {
     return store.products[Math.floor(Math.random() * store.products.length)];
   };
 
-  const hasEnoughStock = (productId, quantity) => {
-    const product = getProductById(productId);
-    return !!product && product.quantity >= quantity;
-  };
-
   // 프로모션 시 상품 가격 변경
   const updateProductPrice = (productId, newPrice) => {
     const productSelector = document.querySelector('#product-select');
@@ -35,7 +30,6 @@ export function createProductService(store) {
     getProductById,
     getProductBySuggestion,
     getRandomProduct,
-    hasEnoughStock,
     updateProductPrice,
   };
 }

@@ -24,7 +24,7 @@ function main() {
 function initialize(store, productService, cartService, promotionService) {
   AddButton.init(productService, cartService, promotionService);
   StockInfo.init(store);
-  CartItem.init(productService, cartService);
+  CartItem.init(cartService);
   CartTotal.init(store);
 }
 

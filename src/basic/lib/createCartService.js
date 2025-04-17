@@ -48,41 +48,51 @@ export const createCartService = (store, productService) => {
     return true;
   };
 
-  const hasEnoughStock = (productId, change) => {
+  const addCartItem = productId => {
+    const cartItem = getCartItemById(productId);
+
+    if (!cartItem) {
+      addNewCartItem(productId);
+    } else {
+      incrementCartItemQuantity(productId);
+    }
+
+    updateCartInfo();
+  };
+
+  const hasEnoughStock = (productQuantity, change) => {
     if (change < 0) {
       return true;
     }
 
-    const product = productService.getProductById(productId);
-    return product && change <= product.quantity;
+    return change <= productQuantity;
   };
 
-  const handleChangeQuantity = (button, productElement, productId) => {
-    const change = parseInt(button.dataset.change);
-
+  const updateCartItem = (change, productElement, productId) => {
     const product = productService.getProductById(productId);
     const cartItem = getCartItemById(productId);
+    const quantity = cartItem.quantity;
+    const newQuantity = quantity + change;
 
-    const currentQuantity = cartItem.quantity;
-    const newQuantity = currentQuantity + change;
+    if (!hasEnoughStock(product.quantity, change)) {
+      alert('재고가 부족합니다.');
+      return;
+    }
 
     if (newQuantity <= 0) {
       store.cart = store.cart.filter(item => item.productId !== productId);
       product.quantity -= change;
       productElement.remove();
-      return;
-    }
-
-    if (hasEnoughStock(productId, change)) {
+    } else {
       updateCartItemQuantity(productElement, product, newQuantity);
       product.quantity -= change;
       cartItem.quantity += change;
-    } else {
-      alert('재고가 부족합니다.');
     }
+
+    updateCartInfo();
   };
 
-  const handleRemoveItem = (productId, productElement) => {
+  const removeCartItem = (productId, productElement) => {
     const product = productService.getProductById(productId);
     const cartItem = getCartItemById(productId);
     const quantity = cartItem.quantity;
@@ -91,6 +101,7 @@ export const createCartService = (store, productService) => {
     product.quantity += quantity;
 
     productElement.remove();
+    updateCartInfo();
   };
 
   const updateCartInfo = () => {
@@ -160,12 +171,8 @@ export const createCartService = (store, productService) => {
 
   return {
     getCartItemById,
-    incrementCartItemQuantity,
-    addNewCartItem,
-    hasEnoughStock,
-    getCartInfo,
-    updateCartInfo,
-    handleChangeQuantity,
-    handleRemoveItem,
+    addCartItem,
+    updateCartItem,
+    removeCartItem,
   };
 };
