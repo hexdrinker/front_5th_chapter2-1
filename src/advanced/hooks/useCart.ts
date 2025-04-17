@@ -1,10 +1,10 @@
 import { useCallback } from 'react';
 import { useCartContext } from '../contexts/CartContext';
-import { useProductContext } from '../contexts/ProductContext';
+import useProduct from './useProduct';
 
 const useCart = () => {
   const { cartItems, setCartItems } = useCartContext();
-  const { setProducts, getProductById } = useProductContext();
+  const { setProducts, getProductById } = useProduct();
 
   const getCartItemById = useCallback(
     (productId: string) => cartItems.find(item => item.id === productId),

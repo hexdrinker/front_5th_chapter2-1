@@ -4,6 +4,11 @@ import { useProductContext } from '../contexts/ProductContext';
 const useProduct = () => {
   const { products, setProducts } = useProductContext();
 
+  const getProductById = useCallback(
+    (productId: string) => products.find(product => product.id === productId),
+    [products]
+  );
+
   const getProductBySuggestion = useCallback(
     (excludedProductId: string) =>
       products.find(product => product.id !== excludedProductId && product.quantity > 0),
@@ -29,6 +34,7 @@ const useProduct = () => {
   return {
     products,
     setProducts,
+    getProductById,
     getProductBySuggestion,
     randomProduct,
     updateProductPrice,

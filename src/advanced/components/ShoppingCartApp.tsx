@@ -5,15 +5,15 @@ import { CartTotal } from './CartTotal';
 import { ProductSelector } from './ProductSelector';
 import { StockStatus } from './StockStatus';
 
+import useProduct from '../hooks/useProduct';
 import useCart from '../hooks/useCart';
 import useDiscount from '../hooks/useDiscount';
 import usePromotion from '../hooks/usePromotion';
 
 import { bulkPurchaseDiscount, quantityDiscount } from '../utils/discount';
-import { useProductContext } from '../contexts/ProductContext';
 
 export const ShoppingCartApp: React.FC = () => {
-  const { products } = useProductContext();
+  const { products } = useProduct();
 
   const { cartItems, addCartItem, updateCartItem, removeCartItem } = useCart();
   const { setLastSelectedProductId } = usePromotion();
