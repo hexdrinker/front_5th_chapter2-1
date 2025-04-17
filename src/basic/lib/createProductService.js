@@ -1,5 +1,3 @@
-import { PRODUCT_SELECT_ID } from '../constants';
-
 export function createProductService(store) {
   const getProductById = productId => {
     return store.products.find(product => product.id === productId);
