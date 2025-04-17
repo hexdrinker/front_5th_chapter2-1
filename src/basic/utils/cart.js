@@ -10,10 +10,6 @@ function getCartItemElementById(productId) {
   return document.querySelector(`#${productId}`);
 }
 
-function getCartItemQuantityFromElement(element) {
-  return parseInt(element.querySelector('span').textContent.split('x ')[1]);
-}
-
 function createCartItemElement(product) {
   const template = document.createElement('template');
   const newItem = `
@@ -40,9 +36,4 @@ function updateCartItemElement(cartItemElement, product, newQuantity) {
     `${product.name} - ${product.price}원 x ${newQuantity}`;
 }
 
-export {
-  addNewCartItemElement,
-  getCartItemElementById,
-  getCartItemQuantityFromElement,
-  updateCartItemElement,
-};
+export { addNewCartItemElement, getCartItemElementById, updateCartItemElement };

@@ -1,6 +1,5 @@
 import {
   getCartItemElementById,
-  getCartItemQuantityFromElement,
   addNewCartItemElement,
   updateCartItemElement,
   updateCartTotalElement,
@@ -11,12 +10,11 @@ import {
   BULK_DISCOUNT_RATE,
   BULK_DISCOUNT_THRESHOLD,
   TUESDAY_DISCOUNT_RATE,
-  CART_ITEMS_ID,
 } from '../constants';
 
 export const createCartService = (store, productService) => {
   const getCartItemById = productId => {
-    return store.cart.find(item => item.productId === productId);
+    return store.cart.find(item => item.id === productId);
   };
 
   const incrementCartItemQuantity = productId => {
@@ -33,6 +31,8 @@ export const createCartService = (store, productService) => {
     updateCartItemElement(cartItemElement, product, newQuantity);
 
     cartItem.quantity += 1;
+    console.log(cartItem, product);
+    cartItem.price += product.price;
     product.quantity -= 1;
     return true;
   };
@@ -41,7 +41,7 @@ export const createCartService = (store, productService) => {
     const product = productService.getProductById(productId);
 
     addNewCartItemElement(product);
-    store.cart.push({ productId, quantity: 1 });
+    store.cart.push({ id: productId, quantity: 1, price: product.price });
     product.quantity -= 1;
 
     return true;
@@ -80,13 +80,14 @@ export const createCartService = (store, productService) => {
     }
 
     if (newQuantity <= 0) {
-      store.cart = store.cart.filter(item => item.productId !== productId);
+      store.cart = store.cart.filter(item => item.id !== productId);
       product.quantity -= change;
       cartItemElement.remove();
     } else {
       updateCartItemElement(cartItemElement, product, newQuantity);
       product.quantity -= change;
       cartItem.quantity += change;
+      cartItem.price += product.price;
     }
 
     updateCartInfo();
@@ -98,7 +99,7 @@ export const createCartService = (store, productService) => {
     const cartItemElement = getCartItemElementById(productId);
     const quantity = cartItem.quantity;
 
-    store.cart = store.cart.filter(item => item.productId !== productId);
+    store.cart = store.cart.filter(item => item.id !== productId);
     product.quantity += quantity;
 
     cartItemElement.remove();
@@ -107,6 +108,7 @@ export const createCartService = (store, productService) => {
 
   const updateCartInfo = () => {
     const cartInfo = getCartInfo();
+    console.log(cartInfo);
     store.totalAmount = cartInfo.totalAmount;
     store.itemCount = cartInfo.itemCount;
     store.discountRate = cartInfo.discountRate;
@@ -117,52 +119,48 @@ export const createCartService = (store, productService) => {
   };
 
   const getCartInfo = () => {
-    let totalAmount = 0;
-    let itemCount = 0;
-    let subTot = 0;
+    let { totalAmount, itemCount, tempTotalAmount } = store.cart.reduce(
+      (acc, cartItem) => {
+        const { quantity, price, id } = cartItem;
+        const quantityDiscount = quantity >= 10 ? QUANTITY_DISCOUNT_RATE[id] || 0 : 0;
 
-    const cartItemsElement = document.querySelector(`#${CART_ITEMS_ID}`);
-    const cartItems = cartItemsElement.children;
+        return {
+          totalAmount: acc.totalAmount + price * (1 - quantityDiscount),
+          itemCount: acc.itemCount + quantity,
+          tempTotalAmount: acc.tempTotalAmount + price,
+        };
+      },
+      { totalAmount: 0, itemCount: 0, tempTotalAmount: 0 }
+    );
 
-    for (let i = 0; i < cartItems.length; i++) {
-      const currentItem = productService.getProductById(cartItems[i].id);
-      const quantity = getCartItemQuantityFromElement(cartItems[i]);
-      const currentItemTotal = currentItem.price * quantity;
-      let disc = 0;
-      itemCount += quantity;
-      subTot += currentItemTotal;
+    let discountRate = 0;
+    if (itemCount >= BULK_DISCOUNT_THRESHOLD) {
+      const bulkDiscount = totalAmount * BULK_DISCOUNT_RATE;
+      const itemDiscount = tempTotalAmount - totalAmount;
 
-      if (quantity >= 10) {
-        disc = QUANTITY_DISCOUNT_RATE[currentItem.id] || 0;
+      if (bulkDiscount > itemDiscount) {
+        totalAmount = tempTotalAmount * (1 - BULK_DISCOUNT_RATE);
+        discountRate = BULK_DISCOUNT_RATE;
       }
 
-      totalAmount += currentItemTotal * (1 - disc);
+      if (itemDiscount <= bulkDiscount) {
+        discountRate = (tempTotalAmount - totalAmount) / tempTotalAmount;
+      }
     }
 
-    let discRate = 0;
-    if (itemCount >= BULK_DISCOUNT_THRESHOLD) {
-      const bulkDisc = totalAmount * BULK_DISCOUNT_RATE;
-      const itemDisc = subTot - totalAmount;
-
-      if (bulkDisc > itemDisc) {
-        totalAmount = subTot * (1 - BULK_DISCOUNT_RATE);
-        discRate = BULK_DISCOUNT_RATE;
-      } else {
-        discRate = (subTot - totalAmount) / subTot;
-      }
-    } else {
-      discRate = (subTot - totalAmount) / subTot;
+    if (itemCount < BULK_DISCOUNT_THRESHOLD) {
+      discountRate = (tempTotalAmount - totalAmount) / tempTotalAmount;
     }
 
     if (new Date().getDay() === 2) {
       totalAmount *= 1 - TUESDAY_DISCOUNT_RATE;
-      discRate = Math.max(discRate, TUESDAY_DISCOUNT_RATE);
+      discountRate = Math.max(discountRate, TUESDAY_DISCOUNT_RATE);
     }
 
     return {
       totalAmount: Math.round(totalAmount),
-      itemCount: itemCount,
-      discountRate: discRate,
+      itemCount,
+      discountRate,
     };
   };
 
