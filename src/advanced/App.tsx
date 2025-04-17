@@ -1,8 +1,15 @@
-import React from "react";
-import { ShoppingCartApp } from "./components/ShoppingCartApp";
+import { ShoppingCartApp } from './components/ShoppingCartApp';
+import { CartProvider } from './contexts/CartProvider';
+import { ProductProvider } from './contexts/ProductProvider';
 
 const App = () => {
-  return <ShoppingCartApp />;
+  return (
+    <ProductProvider>
+      <CartProvider>
+        <ShoppingCartApp />
+      </CartProvider>
+    </ProductProvider>
+  );
 };
 
 export default App;
