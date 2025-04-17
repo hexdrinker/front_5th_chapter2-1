@@ -17,12 +17,12 @@ function main() {
   const promotionService = createPromotionService(store, productService);
 
   render(store);
-  initialize(store, productService, cartService);
+  initialize(store, productService, cartService, promotionService);
   promotionService.initPromotions();
 }
 
-function initialize(store, productService, cartService) {
-  AddButton.init(productService, cartService);
+function initialize(store, productService, cartService, promotionService) {
+  AddButton.init(productService, cartService, promotionService);
   StockInfo.init(store);
   CartItem.init(productService, cartService);
   CartTotal.init(store);

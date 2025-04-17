@@ -1,26 +1,21 @@
 const AddButton = {
-  init: (productService, cartService) => {
+  init: (productService, cartService, promotionService) => {
     const select = document.querySelector('#product-select');
     const button = document.querySelector('#add-to-cart');
 
-    const { getProductById, updateLastSelectedProductId } = productService;
-    const { incrementCartItemQuantity, addNewCartItem, getCartItemById, updateCartInfo } =
-      cartService;
+    const { getProductById } = productService;
+    const { addCartItem } = cartService;
+    const { updateLastSelectedProductId } = promotionService;
 
     button.addEventListener('click', () => {
       const productId = select.value;
       const product = getProductById(productId);
 
-      if (product && product.quantity > 0) {
-        const existingItem = getCartItemById(productId);
-        if (existingItem) {
-          incrementCartItemQuantity(productId);
-        } else {
-          addNewCartItem(productId);
-        }
+      if (!product || product.quantity <= 0) {
+        return;
       }
 
-      updateCartInfo();
+      addCartItem(productId);
       updateLastSelectedProductId(productId);
     });
   },
