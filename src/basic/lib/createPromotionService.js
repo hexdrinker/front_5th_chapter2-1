@@ -5,6 +5,11 @@ export function createPromotionService(store, productService) {
   let flashSaleInterval = null;
   let recommendationTimer = null;
   let recommendationInterval = null;
+  let lastSelectedProductId = null;
+
+  const updateLastSelectedProductId = productId => {
+    lastSelectedProductId = productId;
+  };
 
   const initPromotions = () => {
     initFlashSalePromotion();
@@ -25,7 +30,7 @@ export function createPromotionService(store, productService) {
         if (Math.random() < 0.3 && luckyItem.quantity > 0) {
           const newPrice = Math.round(luckyItem.price * FLASH_SALE_DISCOUNT_RATE);
           alert(`번개세일! ${luckyItem.name}이(가) 20% 할인 중입니다!`);
-          productService.updatePrice(luckyItem.id, newPrice);
+          productService.updateProductPrice(luckyItem.id, newPrice);
         }
       }, 30000);
     }, Math.random() * 10000);
@@ -41,12 +46,12 @@ export function createPromotionService(store, productService) {
 
     recommendationTimer = setTimeout(() => {
       recommendationInterval = setInterval(() => {
-        if (store.lastSelectedProductId) {
-          const suggest = productService.findAvailableExcept(store.lastSelectedProductId);
+        if (lastSelectedProductId) {
+          const suggest = productService.getProductBySuggestion(lastSelectedProductId);
           if (suggest) {
             alert(`${suggest.name}은(는) 어떠세요? 지금 구매하시면 5% 추가 할인!`);
             const newPrice = Math.round(suggest.price * RECOMMEND_DISCOUNT_RATE);
-            productService.updatePrice(suggest.id, newPrice);
+            productService.updateProductPrice(suggest.id, newPrice);
           }
         }
       }, 60000);
@@ -55,5 +60,6 @@ export function createPromotionService(store, productService) {
 
   return {
     initPromotions,
+    updateLastSelectedProductId,
   };
 }

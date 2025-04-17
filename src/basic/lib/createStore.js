@@ -9,7 +9,6 @@ export const createStore = () => {
     bonusPoints: 0,
     discountRate: 0,
     itemCount: 0,
-    lastSelectedProductId: 0,
   };
 
   return state;
