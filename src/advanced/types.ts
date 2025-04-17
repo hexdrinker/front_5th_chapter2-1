@@ -7,14 +7,6 @@ interface IProduct {
 
 interface ICartItem extends IProduct {}
 
-interface ShoppingCartState {
-  lastSelected: string | null;
-  bonusPoints: number;
-  totalAmount: number;
-  itemCount: number;
-  discountRate: number;
-}
-
 interface IDiscountRequestParams {
   cartItems: ICartItem[];
   amount: number;
@@ -26,4 +18,4 @@ interface IDiscountStrategy {
   calculate: (params: IDiscountRequestParams) => number;
 }
 
-export type { IProduct, ICartItem, ShoppingCartState, IDiscountRequestParams, IDiscountStrategy };
+export type { IProduct, ICartItem, IDiscountRequestParams, IDiscountStrategy };
