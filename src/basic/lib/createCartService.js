@@ -31,7 +31,6 @@ export const createCartService = (store, productService) => {
     updateCartItemElement(cartItemElement, product, newQuantity);
 
     cartItem.quantity += 1;
-    console.log(cartItem, product);
     cartItem.price += product.price;
     product.quantity -= 1;
     return true;
@@ -108,7 +107,7 @@ export const createCartService = (store, productService) => {
 
   const updateCartInfo = () => {
     const cartInfo = getCartInfo();
-    console.log(cartInfo);
+
     store.totalAmount = cartInfo.totalAmount;
     store.itemCount = cartInfo.itemCount;
     store.discountRate = cartInfo.discountRate;
