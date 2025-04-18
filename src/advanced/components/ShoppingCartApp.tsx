@@ -10,7 +10,7 @@ import useCart from '../hooks/useCart';
 import useDiscount from '../hooks/useDiscount';
 import usePromotion from '../hooks/usePromotion';
 
-import { bulkPurchaseDiscount, quantityDiscount } from '../utils/discount';
+import { bulkPurchaseDiscount, quantityDiscount } from '../helpers/discount';
 
 export const ShoppingCartApp: React.FC = () => {
   const { products } = useProduct();
