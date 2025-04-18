@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { ICartItem, IDiscountStrategy } from '../types';
-import { tuesdayDiscount } from '../utils/discount';
+import { tuesdayDiscount } from '../helpers/discount';
 import { POINTS_RATIO } from '../constants';
 
 interface Props {
