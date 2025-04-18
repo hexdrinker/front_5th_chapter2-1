@@ -1,16 +1,14 @@
-import React, { useState } from "react";
-import { IProduct } from "../types";
+import React, { useState } from 'react';
+import { IProduct } from '../types';
+import AddButton from './AddButton';
 
 interface ProductSelectorProps {
   products: IProduct[];
   onAddToCart: (productId: string) => void;
 }
 
-export const ProductSelector: React.FC<ProductSelectorProps> = ({
-  products,
-  onAddToCart,
-}) => {
-  const [selectedProductId, setSelectedProductId] = useState<string>("p1");
+export const ProductSelector: React.FC<ProductSelectorProps> = ({ products, onAddToCart }) => {
+  const [selectedProductId, setSelectedProductId] = useState<string>('p1');
 
   const handleClickAdd = () => {
     if (!selectedProductId) {
@@ -32,22 +30,12 @@ export const ProductSelector: React.FC<ProductSelectorProps> = ({
         onChange={handleChangeSelection}
       >
         {products.map(product => (
-          <option
-            key={product.id}
-            value={product.id}
-            disabled={product.quantity === 0}
-          >
+          <option key={product.id} value={product.id} disabled={product.quantity === 0}>
             {product.name} - {product.price.toLocaleString()}원
           </option>
         ))}
       </select>
-      <button
-        id="add-to-cart"
-        className="bg-blue-500 text-white px-4 py-2 rounded"
-        onClick={handleClickAdd}
-      >
-        추가
-      </button>
+      <AddButton onClick={handleClickAdd} />
     </div>
   );
 };
