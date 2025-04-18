@@ -1,4 +1,4 @@
-import { updateCartTotalElement } from '../utils';
+import { updateCartTotalElement } from '../dom-helpers';
 import { CART_TOTAL_ID } from '../constants';
 
 const CartTotal = {

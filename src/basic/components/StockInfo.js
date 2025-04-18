@@ -1,5 +1,5 @@
 import { STOCK_STATUS_ID } from '../constants';
-import { updateStockStatusElement } from '../utils';
+import { updateStockStatusElement } from '../dom-helpers';
 
 const StockInfo = {
   init: store => {

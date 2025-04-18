@@ -4,7 +4,7 @@ import {
   updateCartItemElement,
   updateCartTotalElement,
   updateStockStatusElement,
-} from '../utils';
+} from '../dom-helpers';
 import {
   QUANTITY_DISCOUNT_RATE,
   BULK_DISCOUNT_RATE,
