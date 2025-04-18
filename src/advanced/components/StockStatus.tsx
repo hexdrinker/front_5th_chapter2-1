@@ -2,11 +2,11 @@ import React, { useMemo } from 'react';
 import { IProduct } from '../types';
 import { LOW_STOCK_THRESHOLD } from '../constants';
 
-interface StockInfoProps {
+interface StockStatusProps {
   products: IProduct[];
 }
 
-export const StockStatus: React.FC<StockInfoProps> = ({ products }) => {
+export const StockStatus: React.FC<StockStatusProps> = ({ products }) => {
   const lowStockProducts = useMemo(
     () => products.filter(product => product.quantity < LOW_STOCK_THRESHOLD),
     [products]
