@@ -1,7 +1,7 @@
 import { STOCK_STATUS_ID } from '../constants';
 import { updateStockStatusElement } from '../dom-helpers';
 
-const StockInfo = {
+const StockStatus = {
   init: store => {
     updateStockStatusElement(store.products);
   },
@@ -10,4 +10,4 @@ const StockInfo = {
   },
 };
 
-export default StockInfo;
+export default StockStatus;

@@ -3,7 +3,7 @@ import CartItemList from './components/CartItemList';
 import CartTotal from './components/CartTotal';
 import ProductSelector from './components/ProductSelector';
 import AddButton from './components/AddButton';
-import StockInfo from './components/StockInfo';
+import StockStatus from './components/StockStatus';
 
 import { createStore } from './lib';
 import { createProductService } from './lib';
@@ -23,7 +23,7 @@ function main() {
 
 function initialize(store, productService, cartService, promotionService) {
   AddButton.init(productService, cartService, promotionService);
-  StockInfo.init(store);
+  StockStatus.init(store);
   CartItem.init(cartService);
   CartTotal.init(store);
 }
@@ -35,7 +35,7 @@ function render({ products }) {
   const cartTotal = CartTotal.render();
   const productSelector = ProductSelector.render({ products });
   const addButton = AddButton.render();
-  const stockInfo = StockInfo.render();
+  const stockStatus = StockStatus.render();
 
   root.innerHTML = `
       <div class="bg-gray-100 p-8">
@@ -45,7 +45,7 @@ function render({ products }) {
           ${cartTotal}
           ${productSelector}
           ${addButton}
-          ${stockInfo}
+          ${stockStatus}
         </div>
       </div>
     `;
